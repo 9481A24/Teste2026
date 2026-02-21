@@ -89,6 +89,8 @@ nav{
 .condominio{padding:40px 20px;background:linear-gradient(135deg,#FF8C00,#FFA500);color:white;margin-top:30px;}
 .btn-condominio{display:inline-block;margin-top:15px;background:white;color:#FF8C00;padding:12px 20px;border-radius:8px;text-decoration:none;font-weight:bold;}
 
+############
+  
 /* POPUP FORMULÁRIO */
 #overlay{
   display:none;
@@ -126,6 +128,8 @@ nav{
 #enviarBtn{ background:#00cc66; color:white; margin-bottom:10px; }
 #fecharPopup{ background:#ff4444; color:white; margin-left:10px; }
 
+###########
+  
 /* WHATSAPP FLUTUANTE */
 .whatsapp-btn{
   position:fixed;
@@ -246,6 +250,8 @@ footer{background:#f4f4f4;padding:15px;margin-top:30px;}
   <a href="https://wa.me/5531995439612" target="_blank" class="btn-condominio">Solicitar Proposta para Condomínio</a>
 </div>
 
+########
+  
 <!-- POPUP FORMULÁRIO -->
 <div id="overlay"></div>
 <div id="meuFormulario">
@@ -273,7 +279,9 @@ footer{background:#f4f4f4;padding:15px;margin-top:30px;}
     <button type="button" id="fecharPopup">Fechar</button>
   </form>
 </div>
-
+  
+################
+  
 <!-- BOTÃO WHATSAPP FLUTUANTE -->
 <a class="whatsapp-btn" href="https://wa.me/5531995439612" target="_blank">Falar com profissional</a>
 
@@ -291,6 +299,8 @@ let index = 0;
 function nextSlide(){ index++; if(index >= slides.length) index=0; slideContainer.style.transform=`translateX(-${index*100}%)`; }
 setInterval(nextSlide,3000);
 
+###########
+  
 // POPUP FORMULÁRIO
 const botaoAgendar = document.getElementById("agendarBtn");
 const formularioDiv = document.getElementById("meuFormulario");
@@ -343,6 +353,6 @@ formulario.addEventListener("submit", function(e){
   formularioDiv.style.display="none";
 });
 </script>
-
+###############
 </body>
 </html>
