@@ -275,60 +275,17 @@ let index = 0;
 function nextSlide(){ index++; if(index >= slides.length) index=0; slideContainer.style.transform=`translateX(-${index*100}%)`; }
 setInterval(nextSlide,3000);
 
-###########
+
+
+
+
+
+
+
+
+
+
+
   
-// POPUP FORMULÁRIO
-const botaoAgendar = document.getElementById("agendarBtn");
-const formularioDiv = document.getElementById("meuFormulario");
-const overlay = document.getElementById("overlay");
-const fecharBtn = document.getElementById("fecharPopup");
-
-botaoAgendar.addEventListener("click", e=>{
-  e.preventDefault();
-  overlay.style.display="block";
-  formularioDiv.style.display="block";
-});
-fecharBtn.addEventListener("click", ()=>{ overlay.style.display="none"; formularioDiv.style.display="none"; });
-overlay.addEventListener("click", ()=>{ overlay.style.display="none"; formularioDiv.style.display="none"; });
-
-// ENVIO FORMULÁRIO E GERAR PDF
-const formulario = document.getElementById("formulario");
-formulario.addEventListener("submit", function(e){
-  e.preventDefault();
-  const nome = formulario.nome.value;
-  const celular = formulario.celular.value;
-  const pix = formulario.pix.value;
-  const qrcode = formulario.qrcode.value;
-  const codigo = formulario.codigo.value;
-  const horas = parseInt(formulario.horas.value);
-  const valor = (39.90 * horas).toFixed(2);
-  const cupons = horas;
-
-  // Gerar PDF usando jsPDF
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
-  doc.setFontSize(14);
-  doc.text("Comprovante de Agendamento - Promoção Faxina", 20, 20);
-  doc.setFontSize(12);
-  doc.text(`Nome: ${nome}`,20,30);
-  doc.text(`Celular: ${celular}`,20,40);
-  doc.text(`Código: ${codigo}`,20,50);
-  doc.text(`Horas contratadas: ${horas}`,20,60);
-  doc.text(`Quantidade de cupons: ${cupons}`,20,70);
-  doc.text(`Valor total: R$ ${valor}`,20,80);
-  doc.text(`Chave Pix: ${pix}`,20,90);
-  doc.text(`QR Code Pix: ${qrcode}`,20,100);
-  doc.text("Forma de pagamento: Pix / Presencial / Débito",20,110);
-  
-  doc.save(`Comprovante_${nome}.pdf`);
-
-  alert(`Comprovante gerado!\nValor total: R$${valor}\nCupons: ${cupons}`);
-
-  formulario.reset();
-  overlay.style.display="none";
-  formularioDiv.style.display="none";
-});
-</script>
-###############
 </body>
 </html>
