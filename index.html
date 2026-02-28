@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -222,10 +223,31 @@ flatpickr("#dataInput", {
   }
 });
 
-// ENVIO FORMULÁRIO → redireciona para página de obrigado
+// ENVIO FORMULÁRIO → GERA CUPOM + REDIRECIONA
 const formulario = document.getElementById("formulario");
 formulario.addEventListener("submit", function(e){
   e.preventDefault();
+
+  // Pega os valores do formulário
+  const nome = document.getElementById("nome").value;
+  const whatsapp = document.getElementById("whatsapp").value;
+  const endereco = document.getElementById("endereco").value;
+  const data = document.getElementById("dataInput").value;
+  const pacote = document.getElementById("pacote").value;
+
+  // Gera cupom aleatório
+  const cupom = "FAXINA-" + Math.floor(Math.random()*10000);
+
+  // Salva os dados no localStorage para a página de obrigado
+  localStorage.setItem("dadosCliente", JSON.stringify({
+    nome, whatsapp, endereco, data, pacote, cupom
+  }));
+
+  // Fecha popup
+  overlay.style.display="none";
+  formularioDiv.style.display="none";
+
+  // Redireciona para a página de obrigado
   window.location.href = "obrigado.html";
 });
 </script>
