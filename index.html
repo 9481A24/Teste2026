@@ -54,6 +54,16 @@ nav{position:fixed; top:0; left:0;width:100%; height:6px;background:#FF8C00; z-i
 .condominio{padding:40px 20px;background:linear-gradient(135deg,#FF8C00,#FFA500);color:white;margin-top:30px;}
 .btn-condominio{display:inline-block;margin-top:15px;background:white;color:#FF8C00;padding:12px 20px;border-radius:8px;text-decoration:none;font-weight:bold;}
 
+/* POPUP FORMULÁRIO */
+#overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:999;}
+#meuFormulario{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#f2f2f2;padding:20px;border-radius:10px;width:350px;z-index:1000;box-shadow:0 0 15px rgba(0,0,0,0.5);max-height:90vh;overflow-y:auto;}
+#meuFormulario h2{margin-bottom:20px;}
+#meuFormulario input{width:100%;padding:8px;margin-bottom:10px;box-sizing:border-box;border-radius:5px;border:1px solid #ccc;font-size:14px;}
+#meuFormulario label{display:block;margin-bottom:5px;font-weight:bold;}
+#enviarBtn, #fecharPopup{flex:1;padding:10px;font-size:14px;border:none;border-radius:5px;cursor:pointer;}
+#enviarBtn{background:#00cc66;color:white;margin-right:5px;}
+#fecharPopup{background:#ff4444;color:white;margin-left:5px;}
+
 /* WHATSAPP FLUTUANTE */
 .whatsapp-btn{position:fixed;bottom:20px;right:20px;background:linear-gradient(135deg,#25D366,#128C7E);color:white;font-weight:bold;padding:15px 20px;border-radius:30px;box-shadow:0 4px 12px rgba(0,0,0,0.4);z-index:9999;text-decoration:none;}
 
@@ -69,7 +79,6 @@ footer{background:#f4f4f4;padding:15px;margin-top:30px;}
 }
 </style>
 </head>
-
 <body>
 
 <nav></nav>
@@ -135,6 +144,33 @@ footer{background:#f4f4f4;padding:15px;margin-top:30px;}
   <a href="https://wa.me/5531995439612" target="_blank" class="btn-condominio">Solicitar Proposta para Condomínio</a>
 </div>
 
+<!-- FORMULÁRIO (POPUP) -->
+<div id="overlay"></div>
+<div id="meuFormulario">
+  <h2>Sorteio grátis faxina</h2>
+  <form id="formulario">
+    <label for="nome">Nome:</label>
+    <input type="text" id="nome" name="nome" placeholder="Seu nome" required>
+
+    <label for="whatsapp">WhatsApp:</label>
+    <input type="tel" id="whatsapp" name="whatsapp" placeholder="(XX) XXXXX-XXXX" required>
+
+    <label for="endereco">Endereço:</label>
+    <input type="text" id="endereco" name="endereco" placeholder="Seu endereço" required>
+
+    <label for="dataInput">Escolha a data:</label>
+    <input type="text" id="dataInput" name="data" placeholder="Clique para escolher" readonly required>
+
+    <label for="pacote">Pacote:</label>
+    <input type="text" id="pacote" name="pacote" value="3 horas - R$119,00 (3 cupons)" readonly style="background:#e0e0e0;">
+
+    <div style="display:flex;justify-content:space-between;margin-top:15px;">
+      <button type="submit" id="enviarBtn">Enviar</button>
+      <button type="button" id="fecharPopup">Fechar</button>
+    </div>
+  </form>
+</div>
+
 <a class="whatsapp-btn" href="https://wa.me/5531995439612" target="_blank">Solicitar Orçamento</a>
 
 <footer>
@@ -142,17 +178,55 @@ CNPJ: 59.711.008/0001-09 – Jeová-Jiré
 </footer>
 
 <script>
+// CARROSSEL
 const slideContainer = document.querySelector('.carousel-slide');
 const slides = document.querySelectorAll('.carousel-video');
 let index = 0;
 function nextSlide(){ index++; if(index>=slides.length) index=0; slideContainer.style.transform=`translateX(-${index*100}%)`; }
 setInterval(nextSlide,3000);
 
-// Botão do agendar (popup removido)
+// ABRIR POPUP
 const botaoAgendar = document.getElementById("agendarBtn");
+const formularioDiv = document.getElementById("meuFormulario");
+const overlay = document.getElementById("overlay");
+const fecharBtn = document.getElementById("fecharPopup");
+
 botaoAgendar.addEventListener("click", e=>{
   e.preventDefault();
-  alert("Aqui abrirá o formulário futuramente!");
+  overlay.style.display="block";
+  formularioDiv.style.display="block";
+});
+
+fecharBtn.addEventListener("click", ()=>{
+  overlay.style.display="none";
+  formularioDiv.style.display="none";
+});
+
+// CALENDÁRIO DATAS VERDE/VERMELHO
+let datasOcupadas = ["2026-03-01","2026-03-03"]; // exemplo
+flatpickr("#dataInput", {
+  minDate: "today",
+  dateFormat: "Y-m-d",
+  disable: datasOcupadas,
+  onDayCreate: function(dObj,dStr,fp,dayElem){
+    const date = dayElem.dateObj;
+    const yyyy = date.getFullYear();
+    const mm = ('0'+(date.getMonth()+1)).slice(-2);
+    const dd = ('0'+date.getDate()).slice(-2);
+    const full = `${yyyy}-${mm}-${dd}`;
+    if(datasOcupadas.includes(full)){
+      dayElem.style.background="#ff4444"; dayElem.style.color="white";
+    } else {
+      dayElem.style.background="#00cc66"; dayElem.style.color="white";
+    }
+  }
+});
+
+// ENVIO FORMULÁRIO → redireciona para página de obrigado
+const formulario = document.getElementById("formulario");
+formulario.addEventListener("submit", function(e){
+  e.preventDefault();
+  window.location.href = "obrigado.html";
 });
 </script>
 </body>
