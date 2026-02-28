@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -57,13 +56,12 @@ nav{position:fixed; top:0; left:0;width:100%; height:6px;background:#FF8C00; z-i
 
 /* POPUP FORMULÁRIO */
 #overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:999;}
-#meuFormulario{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#f2f2f2;padding:20px;border-radius:10px;width:350px;z-index:1000;box-shadow:0 0 15px rgba(0,0,0,0.5);max-height:90vh;overflow-y:auto;}
-#meuFormulario h2{margin-bottom:20px;}
+#meuFormulario{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#f2f2f2;padding:20px;border-radius:10px;width:400px;max-height:90vh;overflow-y:auto;box-shadow:0 0 15px rgba(0,0,0,0.5);z-index:1000;}
 #meuFormulario input{width:100%;padding:8px;margin-bottom:10px;box-sizing:border-box;border-radius:5px;border:1px solid #ccc;font-size:14px;}
 #meuFormulario label{display:block;margin-bottom:5px;font-weight:bold;}
-#enviarBtn, #fecharPopup{flex:1;padding:10px;font-size:14px;border:none;border-radius:5px;cursor:pointer;}
-#enviarBtn{background:#00cc66;color:white;margin-right:5px;}
-#fecharPopup{background:#ff4444;color:white;margin-left:5px;}
+button{padding:10px;border:none;border-radius:5px;cursor:pointer;font-weight:bold;}
+#proximoBtn, #enviarBtn{background:#00cc66;color:white;}
+#voltarBtn{background:#ff4444;color:white;}
 
 /* WHATSAPP FLUTUANTE */
 .whatsapp-btn{position:fixed;bottom:20px;right:20px;background:linear-gradient(135deg,#25D366,#128C7E);color:white;font-weight:bold;padding:15px 20px;border-radius:30px;box-shadow:0 4px 12px rgba(0,0,0,0.4);z-index:9999;text-decoration:none;}
@@ -90,7 +88,7 @@ footer{background:#f4f4f4;padding:15px;margin-top:30px;}
 
 <div class="hero">
   <h1>🎉 1 único vencedor ganhará 6 meses de faxina grátis (1 vez por mês)</h1>
-  <p>🕒 "Pacote 3 horas faxina (R$119,00), você ganha 3 cupom para o sorteio." ✅</p>
+  <p>🕒 "Ao comprar 1 hora de faxina (R$39,90), você ganha 1 cupom para o sorteio." ✅</p>
   <p>🏆 Ao atingir 320 horas totais será realizado o sorteio</p>
   <a class="btn" id="agendarBtn">Quero Meus 6 Meses Grátis</a><br>
   <a href="#depoimentos" class="btn-depoimentos">Ver Depoimentos</a>
@@ -145,29 +143,40 @@ footer{background:#f4f4f4;padding:15px;margin-top:30px;}
   <a href="https://wa.me/5531995439612" target="_blank" class="btn-condominio">Solicitar Proposta para Condomínio</a>
 </div>
 
-<!-- FORMULÁRIO (POPUP) -->
+<!-- FORMULÁRIO POPUP EM DUAS ETAPAS -->
 <div id="overlay"></div>
 <div id="meuFormulario">
   <h2>Sorteio grátis faxina</h2>
   <form id="formulario">
-    <label for="nome">Nome:</label>
-    <input type="text" id="nome" name="nome" placeholder="Seu nome" required>
+    <!-- Etapa 1 -->
+    <div id="etapa1">
+      <label for="nome">Nome:</label>
+      <input type="text" id="nome" name="nome" placeholder="Seu nome" required>
 
-    <label for="whatsapp">WhatsApp:</label>
-    <input type="tel" id="whatsapp" name="whatsapp" placeholder="(XX) XXXXX-XXXX" required>
+      <label for="whatsapp">WhatsApp:</label>
+      <input type="tel" id="whatsapp" name="whatsapp" placeholder="(XX) XXXXX-XXXX" required>
 
-    <label for="endereco">Endereço:</label>
-    <input type="text" id="endereco" name="endereco" placeholder="Seu endereço" required>
+      <label for="endereco">Endereço:</label>
+      <input type="text" id="endereco" name="endereco" placeholder="Seu endereço" required>
 
-    <label for="dataInput">Escolha a data:</label>
-    <input type="text" id="dataInput" name="data" placeholder="Clique para escolher" readonly required>
+      <button type="button" id="proximoBtn">Próximo →</button>
+    </div>
 
-    <label for="pacote">Pacote:</label>
-    <input type="text" id="pacote" name="pacote" value="3 horas - R$119,00 (3 cupons)" readonly style="background:#e0e0e0;">
+    <!-- Etapa 2 -->
+    <div id="etapa2" style="display:none;">
+      <label for="dataInput">Escolha a data:</label>
+      <input type="text" id="dataInput" name="data" placeholder="Clique para escolher" readonly required>
 
-    <div style="display:flex;justify-content:space-between;margin-top:15px;">
-      <button type="submit" id="enviarBtn">Enviar</button>
-      <button type="button" id="fecharPopup">Fechar</button>
+      <label for="pacote">Pacote:</label>
+      <input type="text" id="pacote" name="pacote" value="3 horas - R$119,00 (3 cupons)" readonly style="background:#e0e0e0;">
+
+      <label for="enderecoEmpresa">Endereço da Empresa:</label>
+      <input type="text" id="enderecoEmpresa" name="enderecoEmpresa" value="CNPJ 59.711.008/0001-09 – Jeová-Jiré" readonly style="background:#e0e0e0;">
+
+      <div style="display:flex; justify-content:space-between;">
+        <button type="button" id="voltarBtn">← Voltar</button>
+        <button type="submit" id="enviarBtn">Enviar</button>
+      </div>
     </div>
   </form>
 </div>
@@ -190,21 +199,29 @@ setInterval(nextSlide,3000);
 const botaoAgendar = document.getElementById("agendarBtn");
 const formularioDiv = document.getElementById("meuFormulario");
 const overlay = document.getElementById("overlay");
-const fecharBtn = document.getElementById("fecharPopup");
-
 botaoAgendar.addEventListener("click", e=>{
   e.preventDefault();
   overlay.style.display="block";
   formularioDiv.style.display="block";
 });
+overlay.addEventListener("click", ()=>{ formularioDiv.style.display="none"; overlay.style.display="none"; });
 
-fecharBtn.addEventListener("click", ()=>{
-  overlay.style.display="none";
-  formularioDiv.style.display="none";
+// ETAPAS DO FORMULÁRIO
+const etapa1 = document.getElementById("etapa1");
+const etapa2 = document.getElementById("etapa2");
+const proximoBtn = document.getElementById("proximoBtn");
+const voltarBtn = document.getElementById("voltarBtn");
+proximoBtn.addEventListener("click", ()=>{
+  etapa1.style.display = "none";
+  etapa2.style.display = "block";
+});
+voltarBtn.addEventListener("click", ()=>{
+  etapa2.style.display = "none";
+  etapa1.style.display = "block";
 });
 
 // CALENDÁRIO DATAS VERDE/VERMELHO
-let datasOcupadas = ["2026-03-01","2026-03-03"]; // exemplo
+let datasOcupadas = ["2026-03-01","2026-03-03"];
 flatpickr("#dataInput", {
   minDate: "today",
   dateFormat: "Y-m-d",
@@ -223,33 +240,22 @@ flatpickr("#dataInput", {
   }
 });
 
-// ENVIO FORMULÁRIO → GERA CUPOM + REDIRECIONA
+// ENVIO FORMULÁRIO
 const formulario = document.getElementById("formulario");
 formulario.addEventListener("submit", function(e){
   e.preventDefault();
-
-  // Pega os valores do formulário
-  const nome = document.getElementById("nome").value;
-  const whatsapp = document.getElementById("whatsapp").value;
-  const endereco = document.getElementById("endereco").value;
-  const data = document.getElementById("dataInput").value;
-  const pacote = document.getElementById("pacote").value;
-
-  // Gera cupom aleatório
-  const cupom = "FAXINA-" + Math.floor(Math.random()*10000);
-
-  // Salva os dados no localStorage para a página de obrigado
-  localStorage.setItem("dadosCliente", JSON.stringify({
-    nome, whatsapp, endereco, data, pacote, cupom
-  }));
-
-  // Fecha popup
-  overlay.style.display="none";
-  formularioDiv.style.display="none";
-
-  // Redireciona para a página de obrigado
+  const dadosCliente = {
+    nome: document.getElementById("nome").value,
+    whatsapp: document.getElementById("whatsapp").value,
+    endereco: document.getElementById("endereco").value,
+    data: document.getElementById("dataInput").value,
+    pacote: document.getElementById("pacote").value,
+    enderecoEmpresa: document.getElementById("enderecoEmpresa").value
+  };
+  localStorage.setItem("dadosCliente", JSON.stringify(dadosCliente));
   window.location.href = "obrigado.html";
 });
 </script>
+
 </body>
 </html>
