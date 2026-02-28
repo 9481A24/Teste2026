@@ -5,13 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Obrigado!</title>
 <style>
-  body { font-family: Arial, sans-serif; text-align: center; padding: 50px; background: #f9f9f9; }
-  h1 { color: #FF8C00; }
-  p { font-size: 1.1em; margin-bottom: 15px; }
-  .cupom { font-size: 1.5em; color: #00cc66; margin: 15px 0; font-weight: bold; }
-  .valor { font-size: 1.2em; color: #FF8C00; margin-bottom: 20px; }
-  button, a.btn { display: inline-block; padding: 12px 20px; background: #FF8C00; color: white; text-decoration: none; border: none; border-radius: 8px; font-weight: bold; margin: 10px 5px; cursor: pointer; }
-  button:disabled { background: #ccc; cursor: not-allowed; }
+body { font-family: Arial, sans-serif; text-align: center; padding: 50px; background: #f9f9f9; }
+h1 { color: #FF8C00; }
+p { font-size: 1.1em; margin-bottom: 15px; }
+.cupom { font-size: 1.3em; color: #00cc66; margin: 10px 0; font-weight: bold; }
+.valor, .pacote { font-size: 1.2em; color: #FF8C00; margin-bottom: 20px; }
+button, a.btn { display: inline-block; padding: 12px 20px; background: #FF8C00; color: white; text-decoration: none; border: none; border-radius: 8px; font-weight: bold; margin: 10px 5px; cursor: pointer; }
+button:disabled { background: #ccc; cursor: not-allowed; }
 </style>
 </head>
 <body>
@@ -19,58 +19,83 @@
 <h1>Obrigado pelo seu agendamento!</h1>
 <p>Seu pedido foi recebido com sucesso.</p>
 
+<p class="pacote" id="pacoteComprado">Pacote comprado: </p>
 <p class="valor" id="valor">Valor a ser pago: </p>
 
-<p>Finalize seu pagamento para baixar o cupom:</p>
+<p>Finalize seu pagamento para baixar seus cupons:</p>
 <a href="#" id="pagamentoPix" class="btn" target="_blank">Pagar com Pix</a>
 
-<p class="cupom" id="cupom">Cupom: </p>
-<button id="baixarCupom" disabled>Baixar Cupom</button>
+<div id="cuponsContainer">
+  <!-- Cupons numerados aparecerão aqui -->
+</div>
+
+<button id="baixarCupom" disabled>Baixar Cupons</button>
 
 <p>Em breve entraremos em contato para confirmar sua faxina.</p>
 <a href="index.html" class="btn">Voltar para o site</a>
 
 <script>
-  const dados = JSON.parse(localStorage.getItem("dadosCliente"));
-  const pixLink = "https://www.mercadopago.com.br/checkout/v1/redirect?pref_id=SEU_LINK_AQUI"; // seu link Pix
+const dados = JSON.parse(localStorage.getItem("dadosCliente"));
+const pixLink = "https://www.mercadopago.com.br/checkout/v1/redirect?pref_id=SEU_LINK_AQUI"; // seu link Pix
 
-  if(dados){
-    // Mostra valor e cupom na tela
-    document.getElementById("valor").innerText = "Valor a ser pago: " + dados.pacote.split("-")[1].trim();
-    document.getElementById("cupom").innerText = "Cupom: " + dados.cupom;
+if(dados){
+  // mostra pacote e valor
+  document.getElementById("pacoteComprado").innerText = "Pacote comprado: " + dados.pacote;
+  document.getElementById("valor").innerText = "Valor a ser pago: " + dados.pacote.split("-")[1].trim();
+}
+
+// função para gerar cupons numerados conforme pacote
+function gerarCupons(pacote){
+  let qtd = parseInt(pacote.split(" ")[0]); // pega a quantidade de horas
+  let historico = JSON.parse(localStorage.getItem("historicoCupons")) || [];
+  let cuponsNovos = [];
+  for(let i=0;i<qtd;i++){
+    let numero = historico.length + 1;
+    let cupom = "P" + numero;
+    historico.push(cupom);
+    cuponsNovos.push(cupom);
   }
+  localStorage.setItem("historicoCupons", JSON.stringify(historico));
+  return cuponsNovos;
+}
 
-  // Botão de pagamento
-  const btnPagamento = document.getElementById("pagamentoPix");
-  const btnBaixar = document.getElementById("baixarCupom");
+const cuponsCliente = gerarCupons(dados.pacote);
+const container = document.getElementById("cuponsContainer");
+cuponsCliente.forEach(c=>{
+  const p = document.createElement("p");
+  p.className = "cupom";
+  p.innerText = c;
+  container.appendChild(p);
+});
 
-  btnPagamento.href = pixLink;
+const btnPagamento = document.getElementById("pagamentoPix");
+const btnBaixar = document.getElementById("baixarCupom");
+btnPagamento.href = pixLink;
 
-  // Simula liberação do botão baixar cupom após pagamento
-  btnPagamento.addEventListener("click", ()=>{
-    // Aqui pode ser substituído por webhook real para liberar após pagamento confirmado
-    setTimeout(()=>{
-      btnBaixar.disabled = false;
-      alert("Pagamento confirmado! Agora você pode baixar seu cupom.");
-    }, 2000); // 2 segundos simulando confirmação
-  });
+// libera botão baixar após pagamento
+btnPagamento.addEventListener("click", ()=>{
+  setTimeout(()=>{
+    btnBaixar.disabled = false;
+    alert("Pagamento confirmado! Agora você pode baixar seus cupons.");
+  },2000);
+});
 
-  // Botão baixar cupom
-  btnBaixar.addEventListener("click", ()=>{
-    const conteudo = `=== Cupom de Pagamento ===
-Cupom: ${dados.cupom}
-Valor: ${dados.pacote.split("-")[1].trim()}
+// botão baixar cupons
+btnBaixar.addEventListener("click", ()=>{
+  let conteudo = `=== Cupons de Pagamento ===\nPacote: ${dados.pacote}\n`;
+  cuponsCliente.forEach(c=>{ conteudo += `Cupom: ${c}\n`; });
+  conteudo += `
 Cliente: ${dados.nome}
 Endereço: ${dados.endereco}
 Data agendada: ${dados.data}
-
-Use este cupom para confirmar seu pagamento via Pix.`;
-    const blob = new Blob([conteudo], {type: "text/plain;charset=utf-8"});
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = `Cupom_${dados.cupom}.txt`;
-    link.click();
-  });
+Valor: ${dados.pacote.split("-")[1].trim()}
+`;
+  const blob = new Blob([conteudo], {type:"text/plain;charset=utf-8"});
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = `Cupons_${dados.nome}.txt`;
+  link.click();
+});
 </script>
 
 </body>
