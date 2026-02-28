@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -6,18 +5,65 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Obrigado!</title>
 <style>
-body{font-family:Arial,sans-serif;text-align:center;padding:50px;background:#f4f4f4;}
-h1{color:#FF8C00;margin-bottom:20px;}
-p{font-size:1.2em;margin-bottom:20px;}
-a{display:inline-block;padding:15px 25px;background:#25D366;color:white;border-radius:8px;text-decoration:none;font-weight:bold;box-shadow:0 4px 8px rgba(0,0,0,0.2);}
+  body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 50px;
+    background: #f9f9f9;
+  }
+  h1 {
+    color: #FF8C00;
+  }
+  p {
+    font-size: 1.1em;
+    margin-bottom: 15px;
+  }
+  .cupom {
+    font-size: 1.5em;
+    color: #00cc66;
+    margin: 15px 0;
+    font-weight: bold;
+  }
+  .valor {
+    font-size: 1.2em;
+    color: #FF8C00;
+    margin-bottom: 20px;
+  }
+  a.btn {
+    display: inline-block;
+    padding: 12px 20px;
+    background: #FF8C00;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+  }
 </style>
 </head>
 <body>
 
-<h1>✅ Obrigado pelo seu agendamento!</h1>
+<h1>Obrigado pelo seu agendamento!</h1>
 <p>Seu pedido foi recebido com sucesso.</p>
+
+<p class="cupom" id="cupom">Cupom: </p>
+<p class="valor" id="valor">Valor a ser pago: </p>
+
 <p>Em breve entraremos em contato para confirmar sua faxina.</p>
-<a href="index.html">Voltar para o site</a>
+
+<a href="index.html" class="btn">Voltar para o site</a>
+
+<script>
+  // Pega os dados do cliente salvos no localStorage
+  const dados = JSON.parse(localStorage.getItem("dadosCliente"));
+
+  if(dados){
+    // Mostra o cupom gerado
+    document.getElementById("cupom").innerText = "Cupom: " + dados.cupom;
+
+    // Mostra o valor do pacote (apenas o número, mas você pode exibir R$ completo)
+    document.getElementById("valor").innerText = "Valor a ser pago: " + dados.pacote.split("-")[1].trim();
+  }
+</script>
 
 </body>
 </html>
