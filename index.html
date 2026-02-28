@@ -54,21 +54,6 @@ nav{position:fixed; top:0; left:0;width:100%; height:6px;background:#FF8C00; z-i
 .condominio{padding:40px 20px;background:linear-gradient(135deg,#FF8C00,#FFA500);color:white;margin-top:30px;}
 .btn-condominio{display:inline-block;margin-top:15px;background:white;color:#FF8C00;padding:12px 20px;border-radius:8px;text-decoration:none;font-weight:bold;}
 
-/* POPUP FORMULÁRIO 2 MENUS */
-#overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);z-index:999;}
-#meuFormulario{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#f2f2f2;padding:20px;border-radius:10px;width:350px;z-index:1000;box-shadow:0 0 15px rgba(0,0,0,0.5);max-height:90vh;overflow-y:auto;}
-#meuFormulario h2{margin-bottom:20px;}
-#meuFormulario input, #meuFormulario select{width:100%;padding:8px;margin-bottom:10px;box-sizing:border-box;border-radius:5px;border:1px solid #ccc;font-size:14px;}
-#meuFormulario label{display:block;margin-bottom:5px;font-weight:bold;}
-.grupo-botoes{display:flex;justify-content:space-between;margin-top:10px;}
-#enviarBtn, #fecharPopup{flex:1;padding:10px;font-size:14px;border:none;border-radius:5px;cursor:pointer;}
-#enviarBtn{background:#00cc66;color:white;margin-right:5px;}
-#fecharPopup{background:#ff4444;color:white;margin-left:5px;}
-
-/* MENUS */
-.menu{display:none;}
-.menu.active{display:block;}
-
 /* WHATSAPP FLUTUANTE */
 .whatsapp-btn{position:fixed;bottom:20px;right:20px;background:linear-gradient(135deg,#25D366,#128C7E);color:white;font-weight:bold;padding:15px 20px;border-radius:30px;box-shadow:0 4px 12px rgba(0,0,0,0.4);z-index:9999;text-decoration:none;}
 
@@ -150,51 +135,6 @@ footer{background:#f4f4f4;padding:15px;margin-top:30px;}
   <a href="https://wa.me/5531995439612" target="_blank" class="btn-condominio">Solicitar Proposta para Condomínio</a>
 </div>
 
-<div id="overlay"></div>
-<div id="meuFormulario">
-  <h2>Sorteio grátis faxina</h2>
-  <form id="formulario">
-    <div class="menu active" id="menu1">
-      <input type="text" name="nome" placeholder="Nome do cliente" required>
-      <input type="tel" name="celular" placeholder="Celular" required>
-      <input type="text" name="pix" placeholder="Chave Pix (opcional)">
-      <div class="grupo-botoes">
-        <button type="button" id="proximoBtn">Próximo</button>
-        <button type="button" id="fecharPopup">Fechar</button>
-      </div>
-    </div>
-
-    <div class="menu" id="menu2">
-      <label for="dataInput">Escolha a data:</label>
-      <input type="text" id="dataInput" name="data" placeholder="Escolha a data" readonly required>
-
-      <select name="horas" required>
-        <option value="">Quantidade de horas</option>
-        <option value="1">1 hora (R$39,90)</option>
-        <option value="2">2 horas (R$79,80)</option>
-        <option value="3">3 horas (R$119,70)</option>
-        <option value="4">4 horas (R$159,60)</option>
-        <option value="5">5 horas (R$199,50)</option>
-        <option value="6">6 horas (R$239,40)</option>
-        <option value="7">7 horas (R$279,30)</option>
-        <option value="8">8 horas (R$319,20)</option>
-        <option value="9">9 horas (R$359,10)</option>
-      </select>
-
-      <select name="pagamento" required>
-        <option value="">Forma de pagamento</option>
-        <option value="pix">Pix</option>
-        <option value="cartao">Cartão de Crédito</option>
-      </select>
-
-      <div class="grupo-botoes">
-        <button type="submit" id="enviarBtn">Enviar</button>
-        <button type="button" id="voltarBtn">Voltar</button>
-      </div>
-    </div>
-  </form>
-</div>
-
 <a class="whatsapp-btn" href="https://wa.me/5531995439612" target="_blank">Solicitar Orçamento</a>
 
 <footer>
@@ -208,54 +148,12 @@ let index = 0;
 function nextSlide(){ index++; if(index>=slides.length) index=0; slideContainer.style.transform=`translateX(-${index*100}%)`; }
 setInterval(nextSlide,3000);
 
+// Botão do agendar (popup removido)
 const botaoAgendar = document.getElementById("agendarBtn");
-const formularioDiv = document.getElementById("meuFormulario");
-const overlay = document.getElementById("overlay");
-const fecharBtns = document.querySelectorAll("#fecharPopup");
-botaoAgendar.addEventListener("click", e=>{ e.preventDefault(); overlay.style.display="block"; formularioDiv.style.display="block"; });
-fecharBtns.forEach(btn=>btn.addEventListener("click", ()=>{ overlay.style.display="none"; formularioDiv.style.display="none"; }));
-
-const menu1 = document.getElementById("menu1");
-const menu2 = document.getElementById("menu2");
-const proximoBtn = document.getElementById("proximoBtn");
-const voltarBtn = document.getElementById("voltarBtn");
-
-proximoBtn.addEventListener("click", ()=>{
-  const nome = menu1.querySelector("input[name='nome']").value;
-  const celular = menu1.querySelector("input[name='celular']").value;
-  if(!nome || !celular){ alert("Preencha Nome e Celular"); return; }
-  menu1.classList.remove("active");
-  menu2.classList.add("active");
-});
-
-voltarBtn.addEventListener("click", ()=>{
-  menu2.classList.remove("active");
-  menu1.classList.add("active");
-});
-
-// CALENDÁRIO
-let datasOcupadas = [];
-flatpickr("#dataInput", {
-  minDate: "today",
-  dateFormat: "Y-m-d",
-  disable: datasOcupadas
-});
-
-// INTEGRAÇÃO MERCADO PAGO
-const formulario = document.getElementById("formulario");
-formulario.addEventListener("submit", function(e){
+botaoAgendar.addEventListener("click", e=>{
   e.preventDefault();
-  const horas = formulario.horas.value;
-  const pagamento = formulario.pagamento.value;
-  let link = "https://mpago.la/2GgveQi"; // link único
-  window.location.href = link;
+  alert("Aqui abrirá o formulário futuramente!");
 });
-
-// FECHAR POPUP
-function fecharConfirmacao(){
-  overlay.style.display="none";
-  formularioDiv.style.display="none";
-}
 </script>
 </body>
 </html>
