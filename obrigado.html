@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -11,32 +12,21 @@
     padding: 50px;
     background: #f9f9f9;
   }
-  h1 {
-    color: #FF8C00;
-  }
-  p {
-    font-size: 1.1em;
-    margin-bottom: 15px;
-  }
-  .cupom {
-    font-size: 1.5em;
-    color: #00cc66;
-    margin: 15px 0;
-    font-weight: bold;
-  }
-  .valor {
-    font-size: 1.2em;
-    color: #FF8C00;
-    margin-bottom: 20px;
-  }
-  a.btn {
-    display: inline-block;
-    padding: 12px 20px;
-    background: #FF8C00;
-    color: white;
-    text-decoration: none;
-    border-radius: 8px;
-    font-weight: bold;
+  h1 { color: #FF8C00; }
+  p { font-size: 1.1em; margin-bottom: 15px; }
+  .cupom { font-size: 1.5em; color: #00cc66; margin: 15px 0; font-weight: bold; }
+  .valor { font-size: 1.2em; color: #FF8C00; margin-bottom: 20px; }
+  button, a.btn { 
+    display: inline-block; 
+    padding: 12px 20px; 
+    background: #FF8C00; 
+    color: white; 
+    text-decoration: none; 
+    border: none; 
+    border-radius: 8px; 
+    font-weight: bold; 
+    margin: 10px 5px; 
+    cursor: pointer; 
   }
 </style>
 </head>
@@ -48,22 +38,38 @@
 <p class="cupom" id="cupom">Cupom: </p>
 <p class="valor" id="valor">Valor a ser pago: </p>
 
-<p>Em breve entraremos em contato para confirmar sua faxina.</p>
+<button id="baixarCupom">Baixar Cupom</button>
+<a href="#" id="pagamentoPix" class="btn" target="_blank">Pagar com Pix</a>
 
+<p>Em breve entraremos em contato para confirmar sua faxina.</p>
 <a href="index.html" class="btn">Voltar para o site</a>
 
 <script>
-  // Pega os dados do cliente salvos no localStorage
+  // Pega os dados do cliente
   const dados = JSON.parse(localStorage.getItem("dadosCliente"));
+  let pixLink = "https://www.mercadopago.com.br/checkout/v1/redirect?pref_id=SEU_LINK_AQUI"; // Coloque aqui seu link de pagamento Pix
 
   if(dados){
-    // Mostra o cupom gerado
+    // Mostra cupom
     document.getElementById("cupom").innerText = "Cupom: " + dados.cupom;
 
-    // Mostra o valor do pacote (apenas o número, mas você pode exibir R$ completo)
+    // Mostra valor do pacote
     document.getElementById("valor").innerText = "Valor a ser pago: " + dados.pacote.split("-")[1].trim();
   }
-</script>
 
+  // Botão baixar cupom
+  document.getElementById("baixarCupom").addEventListener("click", ()=>{
+    const conteudo = `Cupom: ${dados.cupom}\nValor: ${dados.pacote.split("-")[1].trim()}\nCliente: ${dados.nome}\nEndereço: ${dados.endereco}\nData: ${dados.data}`;
+    const blob = new Blob([conteudo], {type: "text/plain;charset=utf-8"});
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = `Cupom_${dados.cupom}.txt`;
+    link.click();
+  });
+
+  // Botão pagamento Pix
+  document.getElementById("pagamentoPix").href = pixLink;
+
+</script>
 </body>
 </html>
